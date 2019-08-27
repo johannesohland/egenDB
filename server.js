@@ -30,6 +30,23 @@ app.get("/api/guitarists/", (req, res, next) => {
     });
 });
 
+// get linked brand test
+
+app.get("/api/guitarist_brand", (req, res, next) => {
+    var sql = "SELECT guitarists.guitarist_name, brands.brand_name FROM guitarists INNER JOIN brands ON guitarists.ID = guitarist_brand.guitarist_id INNER JOIN guitarist_brand ON guitarist_brand.brand_id = brands.id"
+    var params = []
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "message":"success",
+            "data":rows
+        })
+      });
+  });
+
 app.get("/api/guitarists/make/", (req, res, next) => {
     var sql = "select make from guitarists"
     var params = []
