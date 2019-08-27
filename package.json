@@ -1,0 +1,24 @@
+{
+  "name": "express-api",
+  "version": "1.0.0",
+  "description": "Express REST API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johannesohland/egenDB.git"
+  },
+  "author": "Me",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johannesohland/egenDB/issues"
+  },
+  "homepage": "https://github.com/johannesohland/egenDB#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "md5": "^2.2.1",
+    "sqlite3": "^4.1.0"
+  }
+}
