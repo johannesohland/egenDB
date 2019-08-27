@@ -15,8 +15,8 @@ app.listen(HTTP_PORT, () => {
 
 app.use(express.static('public'))
 
-app.get("/api/cars/", (req, res, next) => {
-  var sql = "select * from cars"
+app.get("/api/guitarists/", (req, res, next) => {
+  var sql = "select * from guitarists"
   var params = []
   db.all(sql, params, (err, rows) => {
       if (err) {
@@ -30,8 +30,8 @@ app.get("/api/cars/", (req, res, next) => {
     });
 });
 
-app.get("/api/cars/make/", (req, res, next) => {
-    var sql = "select make from cars"
+app.get("/api/guitarists/make/", (req, res, next) => {
+    var sql = "select make from guitarists"
     var params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -45,8 +45,8 @@ app.get("/api/cars/make/", (req, res, next) => {
       });
 });
 
-app.get("/api/cars/model/", (req, res, next) => {
-    var sql = "select model from cars"
+app.get("/api/guitarists/model/", (req, res, next) => {
+    var sql = "select model from guitarists"
     var params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -60,8 +60,8 @@ app.get("/api/cars/model/", (req, res, next) => {
       });
 });
 
-app.get("/api/cars/make/:make", (req, res, next) => {
-    var sql = "select * from cars where make = ?"
+app.get("/api/guitarists/make/:make", (req, res, next) => {
+    var sql = "select * from guitarists where make = ?"
     var params = [req.params.make]
     db.all(sql, params, (err, row) => {
         if (err) {
