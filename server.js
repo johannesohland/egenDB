@@ -30,10 +30,10 @@ app.get("/api/guitarists/", (req, res, next) => {
     });
 });
 
-// get linked brand test
+// Get full base
 
 app.get("/api/guitarist_brand", (req, res, next) => {
-    var sql = "SELECT guitarists.guitarist_name, brands.brand_name FROM guitarists INNER JOIN brands ON guitarists.ID = guitarist_brand.guitarist_id INNER JOIN guitarist_brand ON guitarist_brand.brand_id = brands.id"
+    var sql = "SELECT * FROM guitarists INNER JOIN brands ON guitarists.ID = guitarist_brand.guitarist_id INNER JOIN guitarist_brand ON guitarist_brand.brand_id = brands.id"
     var params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
@@ -46,6 +46,41 @@ app.get("/api/guitarist_brand", (req, res, next) => {
         })
       });
   });
+
+  // Add function
+
+  app.get("/add/:guitarist_name/:current_band_name/:endorsement", (req, res, next) => {
+    var g_name = req.params.guitarist_name;
+    var c_band = req.params.current_band_name;
+    var end = req.params.endorsement;
+    console.log(g_name,c_band);
+    var params = []
+    db.run(`INSERT INTO guitarists(guitarist_name,current_band_name) VALUES(?,?)`, [g_name,c_band], function(err){
+      db.run(`INSERT INTO guitarist_brand(guitarist_id,brand_id) VALUES(?,?)`, [this.lastID, end]);
+      if(err){
+        return console.log(err.message);
+      }
+      console.log(`A row has been inserted with rowid ${this.lastID}`)
+    })
+  })
+
+  // Delete function
+
+  app.get("/api/delete/:id", (req, res, next) => {
+    var sql = "DELETE FROM guitarists WHERE id=?"
+    var params = [req.params.make]
+    db.all(sql, params, (err, row) => {
+      if (err) {
+        res.status(400).json({"error":err.message});
+        return;
+      }
+      res.json({
+          "message":"success",
+          "data":row
+      })
+    });
+  });
+
 
 app.get("/api/guitarists/make/", (req, res, next) => {
     var sql = "select make from guitarists"
@@ -77,20 +112,6 @@ app.get("/api/guitarists/model/", (req, res, next) => {
       });
 });
 
-app.get("/api/guitarists/make/:make", (req, res, next) => {
-    var sql = "select * from guitarists where make = ?"
-    var params = [req.params.make]
-    db.all(sql, params, (err, row) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "message":"success",
-            "data":row
-        })
-      });
-});
 
 
 app.get("/api/user/:id", (req, res, next) => {
