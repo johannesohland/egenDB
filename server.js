@@ -8,13 +8,15 @@ app.use(bodyParser.json());
 
 var HTTP_PORT = 8000
 
-// Start server
+// Starts server
 app.listen(HTTP_PORT, () => {
     console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
 });
 
-app.use(express.static('public'))
+app.use(express.static('public')) // Tells server to use files from the "public"-folder
 
+
+// Gets list of guitarists from the "guitarists"-table
 app.get("/api/guitarists/", (req, res, next) => {
   var sql = "select * from guitarists"
   var params = []
@@ -30,7 +32,7 @@ app.get("/api/guitarists/", (req, res, next) => {
     });
 });
 
-// Get full base
+// Gets list of guitarists and their endorsement, but will not get guitarists without endorsements.
 
 app.get("/api/guitarist_brand", (req, res, next) => {
     var sql = "SELECT * FROM guitarists INNER JOIN brands ON guitarists.ID = guitarist_brand.guitarist_id INNER JOIN guitarist_brand ON guitarist_brand.brand_id = brands.id"
@@ -129,7 +131,7 @@ app.get("/api/user/:id", (req, res, next) => {
       });
 });
 
-// Root path
+// Default message
 app.get("/", (req, res, next) => {
     res.json({"message":"Ok"})
 });
