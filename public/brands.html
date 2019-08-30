@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Guitarists and Brands</title>
+    <title>Guitar brands</title>
     <link rel="icon" type="image/png" href="http://www.hiltonparkband.com/wp-content/uploads/2018/09/cropped-guitar-favicon-300x300.png">
     <link href="https://fonts.googleapis.com/css?family=Metal+Mania&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
@@ -51,75 +51,36 @@
     </style>
 </head>
 <body style="display:flex;justify-content:center;">
-    <h2 id="title">Guitarists and guitar brands</h2>
+    <h2 id="title">Guitar brands</h2>
     <p>To order by multiple columns, shift-click any subsequent columns</p>
-
-    <!--Hidden create menu, entirely optional but looks better-->
-    <button onclick="create()">Create a new entry</button>
-    <div hidden id="modal">
-        <div style="display:flex;flex-direction:column">
-        <label for="nameInput">Guitarist name</label>
-        <input name="nameInput" id="addInputName">
-        <br>
-        <label for="bandInput">Current band</label>
-        <input name="bandInput" id="addInputBand">
-        <br>
-        <label for="endInput">Endorsement / brand ID <a href="./brands.html" target="_blank">List of brands</a><span style="font-size:10px;">(more will be added in the future)</span></label>
-        <input name="endInput" id="addInputEnd" type="number">
-        </div>
-        
-        
-        <button onclick="addGuitarist()">Add</button>
-    </div>
 
     <!--This table formatting is required for the DataTable() function. 
         The number of th-tags need to correspond with the number of array objects you insert later.-->
     <table id="display">
         <thead>
             <th>
-                Name
+                ID
             </th>
             <th>
-                Current band
+                Brand name
             </th>
             <th>
-                Endorsement
+                Country
             </th>
             <th>
-                Edit / Delete
+                Year founded
             </th>
         </thead>
     </table>
         
     <script>
-
-        // Unhides the div
-        function create(){
-            $('#modal').modal({
-            });
-        }
-
-        // Calls to the function in server.js with the data it pulls from the input fields
-        function addGuitarist(){
-            console.log("Adding guitarist");
-            if($("addInputName").length == 0 || ("addInputBand").length == 0 || ("addInputEnd").length == 0){
-                alert("Please fill in all the fields");
-            } else {
-                $.get(`/add/${$("#addInputName").val()}/${$("#addInputBand").val()}/${$("#addInputEnd").val()}`, function(result){
-                })
-                location.reload();
-            }
-            
-        }
-        
-
     
         var dataArr = []; // Array used for creating the datatable
         
         function showData(){ // Pulls the data from the base and pushes it into the dataArr array, then it creates the table using the .DataTable() function
-            $.get("/api/guitarist_brand", function(result) {
+            $.get("/api/brands", function(result) {
                 for(var i = 0, len = result.data.length; i < len; i++){
-                    dataArr.push([result.data[i].guitarist_name, result.data[i].current_band_name, result.data[i].brand_name,"<button onclick='edit()'>Edit</button><button onclick='delete()'>Delete</button>"])
+                    dataArr.push([result.data[i].ID, result.data[i].brand_name, result.data[i].country,result.data[i].year_founded])
                 }
                 console.log(result);
                 $("#display").DataTable({

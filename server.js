@@ -32,6 +32,23 @@ app.get("/api/guitarists/", (req, res, next) => {
     });
 });
 
+// Gets a list of the available brands
+
+app.get("/api/brands/", (req, res, next) => {
+  var sql = "SELECT * FROM brands"
+  var params = []
+  db.all(sql, params, (err, rows) => {
+      if (err) {
+        res.status(400).json({"error":err.message});
+        return;
+      }
+      res.json({
+          "message":"success",
+          "data":rows
+      })
+    });
+});
+
 // Gets list of guitarists and their endorsement, but will not get guitarists without endorsements.
 
 app.get("/api/guitarist_brand", (req, res, next) => {
