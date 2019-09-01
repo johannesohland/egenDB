@@ -1,7 +1,7 @@
 'use strict';
 const excelToJson = require('convert-excel-to-json');
 const sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database('cars.db');
+let db = new sqlite3.Database('base.db');
 const result = excelToJson({
     sourceFile: '2019.xls'
 });

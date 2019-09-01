@@ -56,7 +56,7 @@
 
     <!--Hidden create menu, entirely optional but looks better-->
     <button onclick="create()">Create a new entry</button>
-    <div hidden id="modal">
+    <form hidden id="modal">
         <div style="display:flex;flex-direction:column">
         <label for="nameInput">Guitarist name</label>
         <input name="nameInput" id="addInputName">
@@ -69,8 +69,8 @@
         </div>
         
         
-        <button onclick="addGuitarist()">Add</button>
-    </div>
+        <button type="submit" onclick="addGuitarist()" >Add</button>
+    </form>
 
     <!--This table formatting is required for the DataTable() function. 
         The number of th-tags need to correspond with the number of array objects you insert later.-->
@@ -92,6 +92,7 @@
     </table>
         
     <script>
+        
 
         // Unhides the div
         function create(){
@@ -101,14 +102,21 @@
 
         // Calls to the function in server.js with the data it pulls from the input fields
         function addGuitarist(){
-            console.log("Adding guitarist");
-            if($("addInputName").length == 0 || ("addInputBand").length == 0 || ("addInputEnd").length == 0){
+            var newNameVal = $("#addInputName").val();
+            var newBandVal = $("#addInputBand").val();
+            var newEndVal = $("#addInputEnd").val();
+            
+            if(newNameVal.length == 0 || newBandVal.length == 0 || newEndVal.length == 0){
                 alert("Please fill in all the fields");
+                console.log(newNameVal.length, newBandVal.length, newEndVal.length);
             } else {
                 $.get(`/add/${$("#addInputName").val()}/${$("#addInputBand").val()}/${$("#addInputEnd").val()}`, function(result){
                 })
-                location.reload();
+                console.log("Add successful");
             }
+        }
+
+        function edit(){
             
         }
         
