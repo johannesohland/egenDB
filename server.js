@@ -83,70 +83,55 @@ app.get("/api/guitarist_brand", (req, res, next) => {
     })
   })
 
+  // Edit function (WORK IN PROGRESS)
+
+  /*
+  app.get("/edit/:id/:guitarist_name/:current_band_name/:endorsement",(req,res,next) => {
+    var id = req.params.id;
+    var g_name = req.params.guitarist_name;
+    var c_band = req.params.current_band_name;
+    var end = req.params.endorsement;
+    var params = [];
+    
+    db.run(`UPDATE
+              guitarists
+            INNER JOIN
+              guitarist_brand
+            ON guitarists.ID = guitarist_brand.guitarist_id
+            SET
+              guitarist_name = ?,
+              current_band_name = ?,
+              brand_id = ?
+            WHERE
+              guitarists.id = ?`, [g_name,c_band,end,id], function(err){
+                if(err){
+                  return console.log(err.message);
+                }
+                console.log(`Row ${id} has been updated`)
+              })
+          res.status(200).send("Updated row " + id);
+          });
+    */
+
   // Delete function
 
-  app.get("/api/delete/:id", (req, res, next) => {
-    var sql = "DELETE FROM guitarists WHERE id=?"
-    var params = [req.params.make]
-    db.all(sql, params, (err, row) => {
+  app.get("/delete/:id", (req, res, next) => {
+    var id = req.params.id;
+    console.log(id);
+    var params = []
+    db.run(`DELETE FROM guitarists WHERE id=?`, [id], function(err) {
       if (err) {
-        res.status(400).json({"error":err.message});
-        return;
+        return console.error(err.message);
       }
-      res.json({
-          "message":"success",
-          "data":row
-      })
+      db.run(`DELETE FROM guitarist_brand WHERE guitarist_id=?`, [id],function(err){
+      });
+      console.log(`Row(s) deleted`);
     });
-  });
-
-
-app.get("/api/guitarists/make/", (req, res, next) => {
-    var sql = "select make from guitarists"
-    var params = []
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "message":"success",
-            "data":rows
-        })
-      });
-});
-
-app.get("/api/guitarists/model/", (req, res, next) => {
-    var sql = "select model from guitarists"
-    var params = []
-    db.all(sql, params, (err, rows) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "message":"success",
-            "data":rows
-        })
-      });
-});
+    res.status(200).send("Removed guitarist with id " + this.lastID);
+    });
 
 
 
-app.get("/api/user/:id", (req, res, next) => {
-    var sql = "select * from user where id = ?"
-    var params = [req.params.id]
-    db.get(sql, params, (err, row) => {
-        if (err) {
-          res.status(400).json({"error":err.message});
-          return;
-        }
-        res.json({
-            "message":"success",
-            "data":row
-        })
-      });
-});
 
 // Default message
 app.get("/", (req, res, next) => {

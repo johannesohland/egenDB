@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Guitarists</title>
+    <link rel="icon" type="image/png" href="http://www.hiltonparkband.com/wp-content/uploads/2018/09/cropped-guitar-favicon-300x300.png">
+    <link href="https://fonts.googleapis.com/css?family=Metal+Mania&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+    <style>
+        body{
+            font-family:Arial, Helvetica, sans-serif;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-direction:column;
+            background-color:#fee8c8;
+        }
+
+        #title{
+            font-size:56px;
+            color:#e34a33;
+            text-shadow:1.5px 1.5px 1.5px #000;
+        }
+
+        input{
+            margin:10px;
+        }
+
+        th{
+            border: 1px solid black;
+            background-color:#fdbb84;
+            
+        }
+
+        td{
+            border:1px solid black;
+            background-color:#fff;
+            padding:5px;
+            
+        }
+
+        
+    </style>
+</head>
+<body style="display:flex;justify-content:center;">
+    <h2 id="title">Guitarists</h2>
+    <p>To order by multiple columns, shift-click any subsequent columns</p>
+
+    <!--This table formatting is required for the DataTable() function. 
+        The number of th-tags need to correspond with the number of array objects you insert later.-->
+    <table id="display">
+        <thead>
+            <th>
+                ID
+            </th>
+            <th>
+                Guitarist name
+            </th>
+            <th>
+                Current band
+            </th>
+        </thead>
+    </table>
+        
+    <script>
+    
+        var dataArr = []; // Array used for creating the datatable
+        
+        function showData(){ // Pulls the data from the base and pushes it into the dataArr array, then it creates the table using the .DataTable() function
+            $.get("/api/guitarists", function(result) {
+                for(var i = 0, len = result.data.length; i < len; i++){
+                    dataArr.push([result.data[i].ID, result.data[i].guitarist_name, result.data[i].current_band_name])
+                }
+                console.log(result);
+                $("#display").DataTable({
+                    "aaData":dataArr
+                });
+            });  
+        }
+        showData();
+        </script>
+
+</body>
+</html>

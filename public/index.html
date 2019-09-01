@@ -52,11 +52,14 @@
 </head>
 <body style="display:flex;justify-content:center;">
     <h2 id="title">Guitarists and guitar brands</h2>
+    <a href="./brands.html" target="_blank">List of just brands</a>
+    <a href="./guitarists.html" target="_blank">List of just guitarists</a>
     <p>To order by multiple columns, shift-click any subsequent columns</p>
 
-    <!--Hidden create menu, entirely optional but looks better-->
+    <!--Add menu, opens when button is pressed-->
     <button onclick="create()">Create a new entry</button>
-    <form hidden id="modal">
+    <p>(An edit feature is work in progress)</p>
+    <form hidden id="addForm">
         <div style="display:flex;flex-direction:column">
         <label for="nameInput">Guitarist name</label>
         <input name="nameInput" id="addInputName">
@@ -67,11 +70,27 @@
         <label for="endInput">Endorsement / brand ID <a href="./brands.html" target="_blank">List of brands</a><span style="font-size:10px;">(more will be added in the future)</span></label>
         <input name="endInput" id="addInputEnd" type="number">
         </div>
-        
-        
         <button type="submit" onclick="addGuitarist()" >Add</button>
     </form>
 
+    <!--Hidden edit menu (WORK IN PROGRESS-->
+
+    <form hidden id="editForm">
+        <div style="display:flex;flex-direction:column;">
+        <label for="nameEditInput">Guitarist name</label>
+        <input name="nameEditInput" id="editInputName">
+        <br>
+        <label for="bandEditInput">Current band</label>
+        <input name="bandEditInput" id="editInputBand">
+        <br>
+        <label for="endEditInput">Endorsement / brand ID <a href="./brands.html" target="_blank">List of brands</a><span style="font-size:10px;">(more will be added in the future)</span></label>
+        <input name="endEditInput" id="editInputEnd" type="number">
+        </div>
+        <button type="submit" onclick="saveEdit()">Save</button>
+    </form>
+
+
+    
     <!--This table formatting is required for the DataTable() function. 
         The number of th-tags need to correspond with the number of array objects you insert later.-->
     <table id="display">
@@ -86,7 +105,7 @@
                 Endorsement
             </th>
             <th>
-                Edit / Delete
+                Delete
             </th>
         </thead>
     </table>
@@ -96,7 +115,7 @@
 
         // Unhides the div
         function create(){
-            $('#modal').modal({
+            $('#addForm').modal({
             });
         }
 
@@ -108,7 +127,6 @@
             
             if(newNameVal.length == 0 || newBandVal.length == 0 || newEndVal.length == 0){
                 alert("Please fill in all the fields");
-                console.log(newNameVal.length, newBandVal.length, newEndVal.length);
             } else {
                 $.get(`/add/${$("#addInputName").val()}/${$("#addInputBand").val()}/${$("#addInputEnd").val()}`, function(result){
                 })
@@ -116,18 +134,47 @@
             }
         }
 
-        function edit(){
-            
+        // Edit function (WORK IN PROGRESS)
+
+        /*
+        var currentID = 0;
+
+        function edit(id){
+            $('#editForm').modal({
+            });
+            currentID = id;
+        }
+
+        // Saves the edit made in function above
+
+        function saveEdit(){
+            var editNameVal = $("#editInputName").val();
+            var editBandVal = $("#editInputBand").val();
+            var editEndVal = $("#editInputEnd").val();
+            $.get(`/edit/${currentID}/${editNameVal}/${editBandVal}/${editEndVal}`, function(result){ 
+            })
+        }
+
+        */
+
+        // Remove function
+        
+        function remove(id){
+            $.get("/delete/" + id, function(result){
+                console.log("success");
+                location.reload();
+            })
         }
         
+        
 
+        // Function for showing the guitarist, band and brand. But will not show the row if there is no brand connected to the artist.
     
         var dataArr = []; // Array used for creating the datatable
-        
-        function showData(){ // Pulls the data from the base and pushes it into the dataArr array, then it creates the table using the .DataTable() function
+        function showData(){
             $.get("/api/guitarist_brand", function(result) {
                 for(var i = 0, len = result.data.length; i < len; i++){
-                    dataArr.push([result.data[i].guitarist_name, result.data[i].current_band_name, result.data[i].brand_name,"<button onclick='edit()'>Edit</button><button onclick='delete()'>Delete</button>"])
+                    dataArr.push([result.data[i].guitarist_name, result.data[i].current_band_name, result.data[i].brand_name, `<!--<button onclick='edit(${result.data[i].guitarist_id})'>Edit</button>--><button onclick='remove(${result.data[i].guitarist_id})'>Delete</button>`])
                 }
                 console.log(result);
                 $("#display").DataTable({
@@ -135,7 +182,10 @@
                 });
             });  
         }
-        showData();
+        $(document).ready(function () {
+            showData();
+        });
+        
         </script>
 
 </body>
